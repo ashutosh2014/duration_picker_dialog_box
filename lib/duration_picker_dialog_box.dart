@@ -9,23 +9,21 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
-
-enum _ScreenSize {mobile, desktop, tablet}
+enum _ScreenSize { mobile, desktop, tablet }
 
 const _smallBreakPoint = 700.0;
 const _mediumBreakPoint = 940.0;
 
 _ScreenSize getScreenSize(double width) {
-  if(width < _smallBreakPoint) {
+  if (width < _smallBreakPoint) {
     return _ScreenSize.mobile;
-  }
-  else if (width < _mediumBreakPoint) {
+  } else if (width < _mediumBreakPoint) {
     return _ScreenSize.tablet;
-  }
-  else {
+  } else {
     return _ScreenSize.desktop;
   }
 }
+
 const Duration _kDialAnimateDuration = const Duration(milliseconds: 200);
 
 const double _kDurationPickerWidthPortrait = 650.0;
@@ -39,7 +37,7 @@ const double _kTwoPi = 2 * math.pi;
 
 enum DurationPickerMode { Day, Hour, Minute, Second, MilliSecond, MicroSecond }
 
-extension DurationPickerModeExtenstion on DurationPickerMode {
+extension _DurationPickerModeExtenstion on DurationPickerMode {
   static const nextItems = {
     DurationPickerMode.Day: DurationPickerMode.Hour,
     DurationPickerMode.Hour: DurationPickerMode.Minute,
@@ -122,7 +120,7 @@ class _DialPainterNew extends CustomPainter {
       for (final _TappableLabel label in labels) {
         final TextPainter labelPainter = label.painter;
         final Offset labelOffset =
-        Offset(-labelPainter.width / 2.0, -labelPainter.height / 2.0);
+            Offset(-labelPainter.width / 2.0, -labelPainter.height / 2.0);
         labelPainter.paint(canvas, getOffsetForTheta(labelTheta) + labelOffset);
         labelTheta += labelThetaIncrement;
       }
@@ -147,9 +145,9 @@ class _DialPainterNew extends CustomPainter {
     final double labelThetaIncrement = -_kTwoPi / len;
     bool flag = len == 10
         ? !(theta % labelThetaIncrement > 0.25 &&
-        theta % labelThetaIncrement < 0.4)
+            theta % labelThetaIncrement < 0.4)
         : (theta % labelThetaIncrement > 0.1 &&
-        theta % labelThetaIncrement < 0.45);
+            theta % labelThetaIncrement < 0.45);
     if (flag) {
       canvas.drawCircle(focusedPoint, 2.0, selectorPaint..color = dotColor);
     }
@@ -202,9 +200,9 @@ class _DialState extends State<_Dial> with SingleTickerProviderStateMixin {
     _theta = _thetaController!
         .drive(CurveTween(curve: standardEasing))
         .drive(_thetaTween!)
-      ..addListener(() => setState(() {
-        /* _theta.value has changed */
-      }));
+          ..addListener(() => setState(() {
+                /* _theta.value has changed */
+              }));
   }
 
   ThemeData? themeData;
@@ -246,7 +244,7 @@ class _DialState extends State<_Dial> with SingleTickerProviderStateMixin {
   void _animateTo(double targetTheta) {
     final double? currentTheta = _theta!.value;
     double beginTheta =
-    _nearest(targetTheta, currentTheta!, currentTheta + _kTwoPi);
+        _nearest(targetTheta, currentTheta!, currentTheta + _kTwoPi);
     beginTheta = _nearest(targetTheta, beginTheta, currentTheta - _kTwoPi);
     _thetaTween!
       ..begin = beginTheta
@@ -406,7 +404,7 @@ class _DialState extends State<_Dial> with SingleTickerProviderStateMixin {
       int value, String label, VoidCallback onTap) {
     final TextStyle style = textTheme.bodyText1!.copyWith(color: color);
     final double labelScaleFactor =
-    math.min(MediaQuery.of(context).textScaleFactor, 2.0);
+        math.min(MediaQuery.of(context).textScaleFactor, 2.0);
     return _TappableLabel(
       value: value,
       painter: TextPainter(
@@ -426,7 +424,7 @@ class _DialState extends State<_Dial> with SingleTickerProviderStateMixin {
             color,
             hour,
             hour.toString(),
-                () {
+            () {
               _selectValue(hour);
             },
           ),
@@ -455,7 +453,7 @@ class _DialState extends State<_Dial> with SingleTickerProviderStateMixin {
           color,
           minute,
           minute.toString(),
-              () {
+          () {
             _selectValue(minute);
           },
         ),
@@ -483,7 +481,7 @@ class _DialState extends State<_Dial> with SingleTickerProviderStateMixin {
           color,
           minute,
           minute.toString(),
-              () {
+          () {
             _selectValue(minute);
           },
         ),
@@ -499,11 +497,11 @@ class _DialState extends State<_Dial> with SingleTickerProviderStateMixin {
     final Color accentColor =
         pickerTheme.dialHandColor ?? themeData!.colorScheme.primary;
     final Color primaryLabelColor = MaterialStateProperty.resolveAs(
-        pickerTheme.dialTextColor, <MaterialState>{}) ??
+            pickerTheme.dialTextColor, <MaterialState>{}) ??
         themeData!.colorScheme.onSurface;
     final Color secondaryLabelColor = MaterialStateProperty.resolveAs(
-        pickerTheme.dialTextColor,
-        <MaterialState>{MaterialState.selected}) ??
+            pickerTheme.dialTextColor,
+            <MaterialState>{MaterialState.selected}) ??
         themeData!.colorScheme.onPrimary;
     List<_TappableLabel> primaryLabels;
     List<_TappableLabel> secondaryLabels;
@@ -576,11 +574,11 @@ class _DurationPickerDialog extends StatefulWidget {
   /// [initialTime] must not be null.
   const _DurationPickerDialog(
       {Key? key,
-        required this.initialDuration,
-        this.cancelText,
-        this.confirmText,
-        this.showHead = true,
-        this.durationPickerMode})
+      required this.initialDuration,
+      this.cancelText,
+      this.confirmText,
+      this.showHead = true,
+      this.durationPickerMode})
       : super(key: key);
 
   /// The duration initially selected when the dialog is shown.
@@ -631,7 +629,7 @@ class _DurationPickerState extends State<_DurationPickerDialog> {
   @override
   Widget build(BuildContext context) {
     final MaterialLocalizations localizations =
-    MaterialLocalizations.of(context);
+        MaterialLocalizations.of(context);
     final ThemeData theme = Theme.of(context);
 
     /// Duration Head with heading as Duration.
@@ -649,7 +647,7 @@ class _DurationPickerState extends State<_DurationPickerDialog> {
     /// Duration Picker Widget.
     final Widget picker = new Padding(
         padding:
-        const EdgeInsets.only(left: 16.0, right: 16, top: 8, bottom: 8),
+            const EdgeInsets.only(left: 16.0, right: 16, top: 8, bottom: 8),
         child: DurationPicker(
           duration: _selectedDuration ?? Duration(),
           onChange: _handleDurationChanged,
@@ -692,37 +690,37 @@ class _DurationPickerState extends State<_DurationPickerDialog> {
 
     final Dialog dialog = new Dialog(child: new OrientationBuilder(
         builder: (BuildContext context, Orientation orientation) {
-          switch (orientation) {
-            case Orientation.portrait:
-              return new SizedBox(
-                  width: _kDurationPickerWidthPortrait,
-                  height: _kDurationPickerHeightPortrait,
-                  child: new Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: <Widget>[
-                        new Expanded(
-                          child: pickerAndActions,
-                        ),
-                      ]));
-            case Orientation.landscape:
-              return new SizedBox(
-                  width: widget.showHead
-                      ? _kDurationPickerWidthLandscape
-                      : _kDurationPickerWidthLandscape,
-                  height: widget.showHead
-                      ? _kDurationPickerHeightLandscape + 28
-                      : _kDurationPickerHeightLandscape,
-                  child: new Row(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: <Widget>[
-                        new Flexible(
-                          child: pickerAndActions,
-                        ),
-                      ]));
-          }
-        }));
+      switch (orientation) {
+        case Orientation.portrait:
+          return new SizedBox(
+              width: _kDurationPickerWidthPortrait,
+              height: _kDurationPickerHeightPortrait,
+              child: new Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    new Expanded(
+                      child: pickerAndActions,
+                    ),
+                  ]));
+        case Orientation.landscape:
+          return new SizedBox(
+              width: widget.showHead
+                  ? _kDurationPickerWidthLandscape
+                  : _kDurationPickerWidthLandscape,
+              height: widget.showHead
+                  ? _kDurationPickerHeightLandscape + 28
+                  : _kDurationPickerHeightLandscape,
+              child: new Row(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    new Flexible(
+                      child: pickerAndActions,
+                    ),
+                  ]));
+      }
+    }));
 
     return new Theme(
       data: theme.copyWith(
@@ -768,8 +766,11 @@ void _announceToAccessibility(BuildContext context, String message) {
 /// ```
 Future<Duration?> showDurationPicker(
     {required BuildContext context,
-      required Duration initialDuration,
-      DurationPickerMode? durationPickerMode, bool showHead = true, String? confirmText, String? cancelText}) async {
+    required Duration initialDuration,
+    DurationPickerMode? durationPickerMode,
+    bool showHead = true,
+    String? confirmText,
+    String? cancelText}) async {
   return await showDialog<Duration>(
     context: context,
     builder: (BuildContext context) => new _DurationPickerDialog(
@@ -782,6 +783,22 @@ Future<Duration?> showDurationPicker(
   );
 }
 
+/// A Widget for duration picker.
+///
+/// [duration] - a initial Duration for Duration Picker when not provided initialize with Duration().
+/// [onChange] - a function to be called when duration changed and cannot be null.
+/// [durationPickerMode] - Duration Picker Mode to show Widget with Days,  Hours, Minutes, Seconds, Milliseconds, Microseconds, By default Duration Picker Mode is Minute.
+/// [width] -  Width of Duration Picker Widget and can be null.
+/// [height] -  Height of Duration Picker Widget and can be null.
+///
+/// ```dart
+/// DurationPicker(
+///   duration: Duration(),
+///   onChange: onChange,
+///   height: 600,
+///   width: 700
+/// );
+/// ```
 class DurationPicker extends StatefulWidget {
   final Duration duration;
   final ValueChanged<Duration> onChange;
@@ -792,10 +809,10 @@ class DurationPicker extends StatefulWidget {
 
   DurationPicker(
       {this.duration = const Duration(minutes: 0),
-        required this.onChange,
-        this.width,
-        this.height,
-        this.durationPickerMode});
+      required this.onChange,
+      this.width,
+      this.height,
+      this.durationPickerMode});
 
   @override
   _DurationPicker createState() => _DurationPicker();
@@ -804,7 +821,7 @@ class DurationPicker extends StatefulWidget {
 class _DurationPicker extends State<DurationPicker> {
   late DurationPickerMode currentDurationType;
   var boxShadow =
-  BoxShadow(color: Color(0x07000000), offset: Offset(3, 0), blurRadius: 12);
+      BoxShadow(color: Color(0x07000000), offset: Offset(3, 0), blurRadius: 12);
   int days = 0;
   int hours = 0;
   int minutes = 0;
@@ -844,54 +861,54 @@ class _DurationPicker extends State<DurationPicker> {
           child: Row(children: [
             screenSize != _ScreenSize.mobile
                 ? Expanded(
-                flex: 5, child: getDurationFields(context, orientation))
+                    flex: 5, child: getDurationFields(context, orientation))
                 : Container(),
             currentDurationType == DurationPickerMode.Day &&
-                screenSize != _ScreenSize.mobile
+                    screenSize != _ScreenSize.mobile
                 ? Container()
                 : Expanded(
-                flex: 5,
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      screenSize == _ScreenSize.mobile
-                          ? getCurrentSelectionFieldText()
-                          : Container(),
-                      screenSize == _ScreenSize.mobile &&
-                          currentDurationType == DurationPickerMode.Day
-                          ? Column(children: [
-                        SizedBox(
-                          height: 80,
-                        ),
-                        _ShowTimeArgs(
-                          durationMode: DurationPickerMode.Day,
-                          onChanged: updateValue,
-                          onTextChanged: updateDurationFields,
-                          value: days,
-                          formatWidth: 2,
-                          desc: "days",
-                          isEditable: currentDurationType ==
-                              DurationPickerMode.Day,
-                          start: 0,
-                          end: -1,
-                        ),
-                        SizedBox(
-                          height: 80,
-                        )
-                      ])
-                          : Container(
-                        //decoration: BoxDecoration(border: Border.all(width: 2)),
-                        width: 300,
-                        height: 200,
-                        child: _Dial(
-                          value: currentValue,
-                          mode: currentDurationType,
-                          onChanged: updateDurationFields,
-                        ),
-                      ),
-                      getFields(),
-                    ])),
+                    flex: 5,
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          screenSize == _ScreenSize.mobile
+                              ? getCurrentSelectionFieldText()
+                              : Container(),
+                          screenSize == _ScreenSize.mobile &&
+                                  currentDurationType == DurationPickerMode.Day
+                              ? Column(children: [
+                                  SizedBox(
+                                    height: 80,
+                                  ),
+                                  _ShowTimeArgs(
+                                    durationMode: DurationPickerMode.Day,
+                                    onChanged: updateValue,
+                                    onTextChanged: updateDurationFields,
+                                    value: days,
+                                    formatWidth: 2,
+                                    desc: "days",
+                                    isEditable: currentDurationType ==
+                                        DurationPickerMode.Day,
+                                    start: 0,
+                                    end: -1,
+                                  ),
+                                  SizedBox(
+                                    height: 80,
+                                  )
+                                ])
+                              : Container(
+                                  //decoration: BoxDecoration(border: Border.all(width: 2)),
+                                  width: 300,
+                                  height: 200,
+                                  child: _Dial(
+                                    value: currentValue,
+                                    mode: currentDurationType,
+                                    onChanged: updateDurationFields,
+                                  ),
+                                ),
+                          getFields(),
+                        ])),
           ]));
     });
   }
@@ -905,68 +922,68 @@ class _DurationPicker extends State<DurationPicker> {
               children: [
                 currentDurationType == DurationPickerMode.Day
                     ? Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(200),
-                      color: Color(0x1E000000)),
-                  child: Icon(
-                    Icons.arrow_right_rounded,
-                    color: Color(0x42000000),
-                    size: 36,
-                  ),
-                )
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(200),
+                            color: Color(0x1E000000)),
+                        child: Icon(
+                          Icons.arrow_right_rounded,
+                          color: Color(0x42000000),
+                          size: 36,
+                        ),
+                      )
                     : Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(200),
-                      color: Colors.blueAccent),
-                  clipBehavior: Clip.antiAlias,
-                  child: InkWell(
-                      hoverColor: Colors.transparent,
-                      splashColor: Colors.transparent,
-                      highlightColor: Colors.transparent,
-                      focusColor: Colors.transparent,
-                      onTap: () {
-                        updateValue(currentDurationType.prev);
-                      },
-                      child: Icon(
-                        Icons.arrow_left_rounded,
-                        color: Colors.white,
-                        size: 36,
-                      )),
-                ),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(200),
+                            color: Colors.blueAccent),
+                        clipBehavior: Clip.antiAlias,
+                        child: InkWell(
+                            hoverColor: Colors.transparent,
+                            splashColor: Colors.transparent,
+                            highlightColor: Colors.transparent,
+                            focusColor: Colors.transparent,
+                            onTap: () {
+                              updateValue(currentDurationType.prev);
+                            },
+                            child: Icon(
+                              Icons.arrow_left_rounded,
+                              color: Colors.white,
+                              size: 36,
+                            )),
+                      ),
                 Text(
                   describeEnum(currentDurationType),
                   style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
                 ),
                 currentDurationType == DurationPickerMode.MicroSecond
                     ? Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(200),
-                      color: Color(0x1E000000)),
-                  child: Icon(
-                    Icons.arrow_right_rounded,
-                    color: Color(0x42000000),
-                    size: 36,
-                  ),
-                )
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(200),
+                            color: Color(0x1E000000)),
+                        child: Icon(
+                          Icons.arrow_right_rounded,
+                          color: Color(0x42000000),
+                          size: 36,
+                        ),
+                      )
                     : Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(200),
-                      color: Colors.blueAccent),
-                  clipBehavior: Clip.antiAlias,
-                  child: InkWell(
-                      hoverColor: Colors.transparent,
-                      splashColor: Colors.transparent,
-                      highlightColor: Colors.transparent,
-                      focusColor: Colors.transparent,
-                      onTap: () {
-                        updateValue(currentDurationType.next);
-                      },
-                      child: Icon(
-                        Icons.arrow_right_rounded,
-                        color: Colors.white,
-                        size: 36,
-                      )),
-                ),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(200),
+                            color: Colors.blueAccent),
+                        clipBehavior: Clip.antiAlias,
+                        child: InkWell(
+                            hoverColor: Colors.transparent,
+                            splashColor: Colors.transparent,
+                            highlightColor: Colors.transparent,
+                            focusColor: Colors.transparent,
+                            onTap: () {
+                              updateValue(currentDurationType.next);
+                            },
+                            child: Icon(
+                              Icons.arrow_right_rounded,
+                              color: Colors.white,
+                              size: 36,
+                            )),
+                      ),
               ],
             )));
   }
@@ -1062,7 +1079,7 @@ class _DurationPicker extends State<DurationPicker> {
                   formatWidth: 3,
                   desc: "milliseconds",
                   isEditable:
-                  currentDurationType == DurationPickerMode.MicroSecond,
+                      currentDurationType == DurationPickerMode.MicroSecond,
                   start: 0,
                   end: 999,
                 ),
@@ -1075,7 +1092,7 @@ class _DurationPicker extends State<DurationPicker> {
                   formatWidth: 3,
                   desc: 'microseconds',
                   isEditable:
-                  currentDurationType == DurationPickerMode.MicroSecond,
+                      currentDurationType == DurationPickerMode.MicroSecond,
                   start: 0,
                   end: 999,
                 )
@@ -1086,7 +1103,7 @@ class _DurationPicker extends State<DurationPicker> {
               height: 4,
             ),
             currentDurationType == DurationPickerMode.Day &&
-                orientation == Orientation.landscape
+                    orientation == Orientation.landscape
                 ? getFields()
                 : Container()
           ],
@@ -1171,7 +1188,7 @@ class _DurationPicker extends State<DurationPicker> {
       Text(
         ":",
         style:
-        TextStyle(fontWeight: FontWeight.bold, fontSize: 28, height: 1.25),
+            TextStyle(fontWeight: FontWeight.bold, fontSize: 28, height: 1.25),
       ),
       SizedBox(
         width: 4,
@@ -1204,14 +1221,14 @@ class _ShowTimeArgs extends StatefulWidget {
 
   _ShowTimeArgs(
       {required this.value,
-        required this.formatWidth,
-        required this.desc,
-        required this.isEditable,
-        required this.durationMode,
-        required this.onChanged,
-        required this.onTextChanged,
-        required this.start,
-        required this.end});
+      required this.formatWidth,
+      required this.desc,
+      required this.isEditable,
+      required this.durationMode,
+      required this.onChanged,
+      required this.onTextChanged,
+      required this.start,
+      required this.end});
 
   @override
   _ShowTimeArgsState createState() => _ShowTimeArgsState();
@@ -1248,118 +1265,117 @@ class _ShowTimeArgsState extends State<_ShowTimeArgs> {
     return Column(children: [
       widget.isEditable
           ? Container(
-          width: getTextFormFieldWidth(widget.durationMode),
-          height: 41,
-          child: RawKeyboardListener(
-              focusNode: FocusNode(),
-              onKey: (event) {
-                if (event.runtimeType == RawKeyDownEvent) {
-                  switch (event.logicalKey.keyId) {
-                    case 4295426091: //Enter Key ID from keyboard
-                      widget.onChanged(widget.durationMode.next);
-                      break;
-                    case 4295426130:
-                      widget.onTextChanged(
-                          (widget.value + 1) % (widget.end + 1) +
-                              widget.start);
-                      break;
-                    case 4295426129:
-                      widget.onTextChanged(
-                          (widget.value - 1) % (widget.end + 1) +
-                              widget.start);
-                      break;
-                  }
-                }
-              },
-              child: TextFormField(
-                onChanged: (text) {
-                  if (text.trim() == "") {
-                    text = "0";
-                  }
-                  widget.onTextChanged(int.parse(text));
-                },
-                inputFormatters: [
-                  FilteringTextInputFormatter.deny('\n'),
-                  FilteringTextInputFormatter.deny('\t'),
-                  _DurationFieldsFormatter(
-                    start: widget.start,
-                    end: widget.end,
-                    useFinal:
-                    widget.durationMode != DurationPickerMode.Day,
-                  )
-                ],
-                style: TextStyle(fontSize: 20),
-                controller: controller,
-                decoration: InputDecoration(
-                  contentPadding: EdgeInsets.only(left: 10, right: 10),
-                  filled: true,
-                  enabledBorder: const OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.transparent),
-                  ),
-                  errorBorder: OutlineInputBorder(
-                    borderSide:
-                    BorderSide(color: colorScheme.error, width: 2.0),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide:
-                    BorderSide(color: colorScheme.primary, width: 2.0),
-                  ),
-                  focusedErrorBorder: OutlineInputBorder(
-                    borderSide:
-                    BorderSide(color: colorScheme.error, width: 2.0),
-                  ),
-                  errorStyle: const TextStyle(
-                      fontSize: 0.0,
-                      height:
-                      0.0), // Prevent the error text from appearing.
-                ),
-                keyboardType: TextInputType.number,
-                autofocus: true,
-                textAlign: TextAlign.center,
-              )))
+              width: getTextFormFieldWidth(widget.durationMode),
+              height: 41,
+              child: RawKeyboardListener(
+                  focusNode: FocusNode(),
+                  onKey: (event) {
+                    if (event.runtimeType == RawKeyDownEvent) {
+                      switch (event.logicalKey.keyId) {
+                        case 4295426091: //Enter Key ID from keyboard
+                          widget.onChanged(widget.durationMode.next);
+                          break;
+                        case 4295426130:
+                          widget.onTextChanged(
+                              (widget.value + 1) % (widget.end + 1) +
+                                  widget.start);
+                          break;
+                        case 4295426129:
+                          widget.onTextChanged(
+                              (widget.value - 1) % (widget.end + 1) +
+                                  widget.start);
+                          break;
+                      }
+                    }
+                  },
+                  child: TextFormField(
+                    onChanged: (text) {
+                      if (text.trim() == "") {
+                        text = "0";
+                      }
+                      widget.onTextChanged(int.parse(text));
+                    },
+                    inputFormatters: [
+                      FilteringTextInputFormatter.deny('\n'),
+                      FilteringTextInputFormatter.deny('\t'),
+                      _DurationFieldsFormatter(
+                        start: widget.start,
+                        end: widget.end,
+                        useFinal: widget.durationMode != DurationPickerMode.Day,
+                      )
+                    ],
+                    style: TextStyle(fontSize: 20),
+                    controller: controller,
+                    decoration: InputDecoration(
+                      contentPadding: EdgeInsets.only(left: 10, right: 10),
+                      filled: true,
+                      enabledBorder: const OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.transparent),
+                      ),
+                      errorBorder: OutlineInputBorder(
+                        borderSide:
+                            BorderSide(color: colorScheme.error, width: 2.0),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide:
+                            BorderSide(color: colorScheme.primary, width: 2.0),
+                      ),
+                      focusedErrorBorder: OutlineInputBorder(
+                        borderSide:
+                            BorderSide(color: colorScheme.error, width: 2.0),
+                      ),
+                      errorStyle: const TextStyle(
+                          fontSize: 0.0,
+                          height:
+                              0.0), // Prevent the error text from appearing.
+                    ),
+                    keyboardType: TextInputType.number,
+                    autofocus: true,
+                    textAlign: TextAlign.center,
+                  )))
           : InkWell(
-        hoverColor: Colors.transparent,
-        splashColor: Colors.transparent,
-        highlightColor: Colors.transparent,
-        focusColor: Colors.transparent,
-        onTap: () async {
-          widget.onChanged(widget.durationMode);
-          timerColor = Color(0x1E000000);
-        },
-        onHover: (hoverCursor) {
-          setState(() {
-            boxShadow = hoverCursor
-                ? BoxShadow(
-                color: Color(0x30004CBE),
-                offset: Offset(0, 6),
-                blurRadius: 12)
-                : BoxShadow(
-                color: Color(0x07000000),
-                offset: Offset(3, 0),
-                blurRadius: 12);
-            timerColor =
-            hoverCursor ? Color(0x32000000) : Color(0x1E000000);
-          });
-        },
-        child: Container(
-          constraints: BoxConstraints(maxWidth: 150),
-          padding: EdgeInsets.only(left: 6, right: 6, top: 4, bottom: 4),
-          decoration: BoxDecoration(
-            color: timerColor,
-            borderRadius: BorderRadius.circular(4),
-          ),
-          child: Text(
-            widget.durationMode != DurationPickerMode.Day
-                ? getFormattedStringWithLeadingZeros(
-                widget.value, widget.formatWidth)
-                : widget.value.toString().padLeft(2, '0'),
-            style: TextStyle(
-              fontSize: 28,
+              hoverColor: Colors.transparent,
+              splashColor: Colors.transparent,
+              highlightColor: Colors.transparent,
+              focusColor: Colors.transparent,
+              onTap: () async {
+                widget.onChanged(widget.durationMode);
+                timerColor = Color(0x1E000000);
+              },
+              onHover: (hoverCursor) {
+                setState(() {
+                  boxShadow = hoverCursor
+                      ? BoxShadow(
+                          color: Color(0x30004CBE),
+                          offset: Offset(0, 6),
+                          blurRadius: 12)
+                      : BoxShadow(
+                          color: Color(0x07000000),
+                          offset: Offset(3, 0),
+                          blurRadius: 12);
+                  timerColor =
+                      hoverCursor ? Color(0x32000000) : Color(0x1E000000);
+                });
+              },
+              child: Container(
+                constraints: BoxConstraints(maxWidth: 150),
+                padding: EdgeInsets.only(left: 6, right: 6, top: 4, bottom: 4),
+                decoration: BoxDecoration(
+                  color: timerColor,
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Text(
+                  widget.durationMode != DurationPickerMode.Day
+                      ? getFormattedStringWithLeadingZeros(
+                          widget.value, widget.formatWidth)
+                      : widget.value.toString().padLeft(2, '0'),
+                  style: TextStyle(
+                    fontSize: 28,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
             ),
-            overflow: TextOverflow.ellipsis,
-          ),
-        ),
-      ),
       Text(
         widget.desc,
         style: TextStyle(fontSize: 12, height: 1.5),
@@ -1413,9 +1429,9 @@ class _DurationFieldsFormatter extends TextInputFormatter {
 
   @override
   TextEditingValue formatEditUpdate(
-      TextEditingValue oldValue,
-      TextEditingValue newValue,
-      ) {
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
     final String text = newValue.text;
     int selectionIndex = newValue.selection.end;
     int value = 0;
