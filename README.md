@@ -71,9 +71,9 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 ```
-![Sample Image](./images/example.png)
+![Sample Image](./images/example.jpg)
 
-![Sample Image](./images/example_Mobile.png)
+![Sample Image](./images/example2.jpg)
 
 
 
@@ -110,4 +110,4 @@ DurationPicker(
 )
 ```
 
-![Sample Image](./images/exmple2.png)
+![Sample Image](./images/example3.jpg)
