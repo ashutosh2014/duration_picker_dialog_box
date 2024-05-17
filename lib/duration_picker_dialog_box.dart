@@ -3,11 +3,9 @@ library duration_picker_dialog_box;
 import 'dart:async';
 import 'dart:math' as math;
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 
 enum _ScreenSize { mobile, desktop, tablet }
 
@@ -87,7 +85,7 @@ class _DialPainterNew extends CustomPainter {
     required this.theta,
     required this.textDirection,
     required this.selectedValue,
-  }) : super(repaint: PaintingBinding.instance!.systemFonts);
+  }) : super(repaint: PaintingBinding.instance.systemFonts);
 
   final List<_TappableLabel> primaryLabels;
   final List<_TappableLabel> secondaryLabels;
@@ -198,11 +196,11 @@ class _DialState extends State<_Dial> with SingleTickerProviderStateMixin {
     );
     _thetaTween = Tween<double>(begin: _getThetaForTime(widget.value));
     _theta = _thetaController!
-        .drive(CurveTween(curve: standardEasing))
+        .drive(CurveTween(curve: Easing.legacy))
         .drive(_thetaTween!)
-          ..addListener(() => setState(() {
-                /* _theta.value has changed */
-              }));
+      ..addListener(() => setState(() {
+            /* _theta.value has changed */
+          }));
   }
 
   ThemeData? themeData;
@@ -402,7 +400,7 @@ class _DialState extends State<_Dial> with SingleTickerProviderStateMixin {
 
   _TappableLabel _buildTappableLabel(TextTheme textTheme, Color color,
       int value, String label, VoidCallback onTap) {
-    final TextStyle style = textTheme.bodyText1!.copyWith(color: color);
+    final TextStyle style = textTheme.bodyLarge!.copyWith(color: color);
     final double labelScaleFactor =
         math.min(MediaQuery.of(context).textScaleFactor, 2.0);
     return _TappableLabel(
@@ -493,15 +491,14 @@ class _DialState extends State<_Dial> with SingleTickerProviderStateMixin {
     final ThemeData theme = Theme.of(context);
     final TimePickerThemeData pickerTheme = TimePickerTheme.of(context);
     final Color backgroundColor = pickerTheme.dialBackgroundColor ??
-        themeData!.colorScheme.onBackground.withOpacity(0.12);
+        themeData!.colorScheme.onSurface.withOpacity(0.12);
     final Color accentColor =
         pickerTheme.dialHandColor ?? themeData!.colorScheme.primary;
-    final Color primaryLabelColor = MaterialStateProperty.resolveAs(
-            pickerTheme.dialTextColor, <MaterialState>{}) ??
+    final Color primaryLabelColor = WidgetStateProperty.resolveAs(
+            pickerTheme.dialTextColor, <WidgetState>{}) ??
         themeData!.colorScheme.onSurface;
-    final Color secondaryLabelColor = MaterialStateProperty.resolveAs(
-            pickerTheme.dialTextColor,
-            <MaterialState>{MaterialState.selected}) ??
+    final Color secondaryLabelColor = WidgetStateProperty.resolveAs(
+            pickerTheme.dialTextColor, <WidgetState>{WidgetState.selected}) ??
         themeData!.colorScheme.onPrimary;
     List<_TappableLabel> primaryLabels;
     List<_TappableLabel> secondaryLabels;
@@ -951,7 +948,7 @@ class _DurationPicker extends State<DurationPicker> {
                             )),
                       ),
                 Text(
-                  describeEnum(currentDurationType),
+                  currentDurationType.name,
                   style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
                 ),
                 currentDurationType == DurationPickerMode.MicroSecond
@@ -993,7 +990,7 @@ class _DurationPicker extends State<DurationPicker> {
         width: double.infinity,
         child: Text(
           "Select ".toUpperCase() +
-              describeEnum(currentDurationType).toUpperCase(),
+              currentDurationType.name.toUpperCase(),
           style: TextStyle(color: Theme.of(context).colorScheme.primary),
           textAlign: TextAlign.left,
         ));
@@ -1267,10 +1264,10 @@ class _ShowTimeArgsState extends State<_ShowTimeArgs> {
           ? Container(
               width: getTextFormFieldWidth(widget.durationMode),
               height: 41,
-              child: RawKeyboardListener(
+              child: KeyboardListener(
                   focusNode: FocusNode(),
-                  onKey: (event) {
-                    if (event.runtimeType == RawKeyDownEvent) {
+                  onKeyEvent: (event) {
+                    if (event is KeyDownEvent) {
                       switch (event.logicalKey.keyId) {
                         case 4295426091: //Enter Key ID from keyboard
                           widget.onChanged(widget.durationMode.next);

@@ -4,7 +4,7 @@ version: 1.0.1
 homepage: https://github.com/ashutosh2014/duration_picker_dialog_box
 
 environment:
-  sdk: ">=2.12.0 <3.0.0"
+  sdk: ">=3.0.0 <4.0.0"
   flutter: ">=1.17.0"
 
 dependencies:
