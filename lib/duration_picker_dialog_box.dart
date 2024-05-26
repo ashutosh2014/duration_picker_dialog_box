@@ -29,7 +29,7 @@ const double _kDurationPickerWidthLandscape = 600.0;
 
 //const double _kDurationPickerHeightPortrait = 380.0;
 const double _kDurationPickerHeightPortrait = 360.0;
-const double _kDurationPickerHeightLandscape = 310.0;
+const double _kDurationPickerHeightLandscape = 320.0;
 
 const double _kTwoPi = 2 * math.pi;
 
@@ -401,14 +401,11 @@ class _DialState extends State<_Dial> with SingleTickerProviderStateMixin {
   _TappableLabel _buildTappableLabel(TextTheme textTheme, Color color,
       int value, String label, VoidCallback onTap) {
     final TextStyle style = textTheme.bodyLarge!.copyWith(color: color);
-    final double labelScaleFactor =
-        math.min(MediaQuery.of(context).textScaleFactor, 2.0);
     return _TappableLabel(
       value: value,
       painter: TextPainter(
         text: TextSpan(style: style, text: label),
         textDirection: TextDirection.ltr,
-        textScaleFactor: labelScaleFactor,
       )..layout(),
       onTap: onTap,
     );
@@ -856,63 +853,65 @@ class _DurationPicker extends State<DurationPicker> {
           width: width,
           height: height,
           child: Row(children: [
-            screenSize != _ScreenSize.mobile
-                ? Expanded(
-                    flex: 5, child: getDurationFields(context, orientation))
-                : Container(),
-            currentDurationType == DurationPickerMode.Day &&
-                    screenSize != _ScreenSize.mobile
-                ? Container()
-                : Expanded(
-                    flex: 5,
-                    child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          screenSize == _ScreenSize.mobile
-                              ? getCurrentSelectionFieldText()
-                              : Container(),
-                          screenSize == _ScreenSize.mobile &&
-                                  currentDurationType == DurationPickerMode.Day
-                              ? Column(children: [
-                                  SizedBox(
-                                    height: 80,
-                                  ),
-                                  _ShowTimeArgs(
-                                    durationMode: DurationPickerMode.Day,
-                                    onChanged: updateValue,
-                                    onTextChanged: updateDurationFields,
-                                    value: days,
-                                    formatWidth: 2,
-                                    desc: "days",
-                                    isEditable: currentDurationType ==
-                                        DurationPickerMode.Day,
-                                    start: 0,
-                                    end: -1,
-                                  ),
-                                  SizedBox(
-                                    height: 80,
-                                  )
-                                ])
-                              : Container(
-                                  //decoration: BoxDecoration(border: Border.all(width: 2)),
-                                  width: 300,
-                                  height: 200,
-                                  child: _Dial(
-                                    value: currentValue,
-                                    mode: currentDurationType,
-                                    onChanged: updateDurationFields,
-                                  ),
-                                ),
-                          getFields(),
-                        ])),
+            if (screenSize != _ScreenSize.mobile)
+              Expanded(flex: 5, child: getDurationFields(context, orientation)),
+            if (!(currentDurationType == DurationPickerMode.Day &&
+                screenSize != _ScreenSize.mobile))
+              Expanded(
+                  flex: 5,
+                  child: Stack(
+                    children: [
+                      if (screenSize == _ScreenSize.mobile)
+                        Align(
+                          alignment: Alignment.topLeft,
+                          child: getCurrentSelectionFieldText(),
+                        ),
+                      Center(
+                        child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              screenSize == _ScreenSize.mobile &&
+                                      currentDurationType ==
+                                          DurationPickerMode.Day
+                                  ? _ShowTimeArgs(
+                                      durationMode: DurationPickerMode.Day,
+                                      onChanged: updateValue,
+                                      onTextChanged: updateDurationFields,
+                                      value: days,
+                                      formatWidth: 2,
+                                      desc: "days",
+                                      isEditable: currentDurationType ==
+                                          DurationPickerMode.Day,
+                                      start: 0,
+                                      end: -1,
+                                    )
+                                  : Container(
+                                      width: 300,
+                                      height: 200,
+                                      child: _Dial(
+                                        value: currentValue,
+                                        mode: currentDurationType,
+                                        onChanged: updateDurationFields,
+                                      ),
+                                    ),
+                            ]),
+                      ),
+                      Align(
+                        alignment: Alignment.bottomCenter,
+                        child: getFields(),
+                      ),
+                    ],
+                  )),
           ]));
     });
   }
 
   Widget getFields() {
+    print("currentDurationType>>> $currentDurationType");
     return Flexible(
         child: Container(
+            height: 42,
             padding: EdgeInsets.only(left: 10, right: 10),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -989,8 +988,7 @@ class _DurationPicker extends State<DurationPicker> {
     return Container(
         width: double.infinity,
         child: Text(
-          "Select ".toUpperCase() +
-              currentDurationType.name.toUpperCase(),
+          "Select ".toUpperCase() + currentDurationType.name.toUpperCase(),
           style: TextStyle(color: Theme.of(context).colorScheme.primary),
           textAlign: TextAlign.left,
         ));
@@ -998,111 +996,121 @@ class _DurationPicker extends State<DurationPicker> {
 
   Widget getDurationFields(BuildContext context, Orientation orientation) {
     return Container(
-        padding: EdgeInsets.only(left: 10, right: 10),
-        width: 100,
-        child: Column(
-          children: <Widget>[
-            getCurrentSelectionFieldText(),
-            SizedBox(
-              height: 10,
+        width: double.maxFinite,
+        child: Stack(
+          children: [
+            Align(
+              alignment: Alignment.topLeft,
+              child: getCurrentSelectionFieldText(),
             ),
-            _ShowTimeArgs(
-              durationMode: DurationPickerMode.Day,
-              onChanged: updateValue,
-              onTextChanged: updateDurationFields,
-              value: days,
-              formatWidth: 2,
-              desc: "days",
-              isEditable: currentDurationType == DurationPickerMode.Day,
-              start: 0,
-              end: -1,
-            ),
-            SizedBox(
-              height: 6,
-            ),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                _ShowTimeArgs(
-                  durationMode: DurationPickerMode.Hour,
-                  onChanged: updateValue,
-                  onTextChanged: updateDurationFields,
-                  value: hours,
-                  formatWidth: 2,
-                  desc: "hours",
-                  isEditable: currentDurationType == DurationPickerMode.Hour,
-                  start: 0,
-                  end: 23,
+              children: <Widget>[
+                SizedBox(
+                  height: 10,
                 ),
-                getColonWidget(),
                 _ShowTimeArgs(
-                  durationMode: DurationPickerMode.Minute,
+                  durationMode: DurationPickerMode.Day,
                   onChanged: updateValue,
                   onTextChanged: updateDurationFields,
-                  value: minutes,
+                  value: days,
                   formatWidth: 2,
-                  desc: "minutes",
-                  isEditable: currentDurationType == DurationPickerMode.Minute,
+                  desc: "days",
+                  isEditable: currentDurationType == DurationPickerMode.Day,
                   start: 0,
-                  end: 59,
+                  end: -1,
                 ),
-                getColonWidget(),
-                _ShowTimeArgs(
-                  durationMode: DurationPickerMode.Second,
-                  onChanged: updateValue,
-                  onTextChanged: updateDurationFields,
-                  value: seconds,
-                  formatWidth: 2,
-                  desc: "seconds",
-                  isEditable: currentDurationType == DurationPickerMode.Second,
-                  start: 0,
-                  end: 59,
-                )
+                SizedBox(
+                  height: 6,
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    _ShowTimeArgs(
+                      durationMode: DurationPickerMode.Hour,
+                      onChanged: updateValue,
+                      onTextChanged: updateDurationFields,
+                      value: hours,
+                      formatWidth: 2,
+                      desc: "hours",
+                      isEditable:
+                          currentDurationType == DurationPickerMode.Hour,
+                      start: 0,
+                      end: 23,
+                    ),
+                    getColonWidget(),
+                    _ShowTimeArgs(
+                      durationMode: DurationPickerMode.Minute,
+                      onChanged: updateValue,
+                      onTextChanged: updateDurationFields,
+                      value: minutes,
+                      formatWidth: 2,
+                      desc: "minutes",
+                      isEditable:
+                          currentDurationType == DurationPickerMode.Minute,
+                      start: 0,
+                      end: 59,
+                    ),
+                    getColonWidget(),
+                    _ShowTimeArgs(
+                      durationMode: DurationPickerMode.Second,
+                      onChanged: updateValue,
+                      onTextChanged: updateDurationFields,
+                      value: seconds,
+                      formatWidth: 2,
+                      desc: "seconds",
+                      isEditable:
+                          currentDurationType == DurationPickerMode.Second,
+                      start: 0,
+                      end: 59,
+                    )
+                  ],
+                ),
+                SizedBox(
+                  height: 6,
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    _ShowTimeArgs(
+                      durationMode: DurationPickerMode.MilliSecond,
+                      onChanged: updateValue,
+                      onTextChanged: updateDurationFields,
+                      value: milliseconds,
+                      formatWidth: 3,
+                      desc: "milliseconds",
+                      isEditable:
+                          currentDurationType == DurationPickerMode.MicroSecond,
+                      start: 0,
+                      end: 999,
+                    ),
+                    getColonWidget(),
+                    _ShowTimeArgs(
+                      durationMode: DurationPickerMode.MicroSecond,
+                      onChanged: updateValue,
+                      onTextChanged: updateDurationFields,
+                      value: microseconds,
+                      formatWidth: 3,
+                      desc: 'microseconds',
+                      isEditable:
+                          currentDurationType == DurationPickerMode.MicroSecond,
+                      start: 0,
+                      end: 999,
+                    )
+                  ],
+                ),
+                SizedBox(
+                  width: 2,
+                  height: 4,
+                ),
+                currentDurationType == DurationPickerMode.Day &&
+                        orientation == Orientation.landscape
+                    ? getFields()
+                    : Container()
               ],
             ),
-            SizedBox(
-              height: 6,
-            ),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                _ShowTimeArgs(
-                  durationMode: DurationPickerMode.MilliSecond,
-                  onChanged: updateValue,
-                  onTextChanged: updateDurationFields,
-                  value: milliseconds,
-                  formatWidth: 3,
-                  desc: "milliseconds",
-                  isEditable:
-                      currentDurationType == DurationPickerMode.MicroSecond,
-                  start: 0,
-                  end: 999,
-                ),
-                getColonWidget(),
-                _ShowTimeArgs(
-                  durationMode: DurationPickerMode.MicroSecond,
-                  onChanged: updateValue,
-                  onTextChanged: updateDurationFields,
-                  value: microseconds,
-                  formatWidth: 3,
-                  desc: 'microseconds',
-                  isEditable:
-                      currentDurationType == DurationPickerMode.MicroSecond,
-                  start: 0,
-                  end: 999,
-                )
-              ],
-            ),
-            SizedBox(
-              width: 2,
-              height: 4,
-            ),
-            currentDurationType == DurationPickerMode.Day &&
-                    orientation == Orientation.landscape
-                ? getFields()
-                : Container()
           ],
         ));
   }
@@ -1170,8 +1178,6 @@ class _DurationPicker extends State<DurationPicker> {
 
   double? getWidth(durationType) {
     switch (durationType) {
-      case DurationPickerMode.Day:
-        return width! == _kDurationPickerWidthLandscape ? width! / 2 : width;
       default:
         return width == _kDurationPickerWidthLandscape ? width : width! * 2;
     }
@@ -1263,7 +1269,7 @@ class _ShowTimeArgsState extends State<_ShowTimeArgs> {
       widget.isEditable
           ? Container(
               width: getTextFormFieldWidth(widget.durationMode),
-              height: 41,
+              height: 42,
               child: KeyboardListener(
                   focusNode: FocusNode(),
                   onKeyEvent: (event) {

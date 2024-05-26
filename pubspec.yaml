@@ -1,6 +1,6 @@
 name: duration_picker_dialog_box
 description: A Duration Picker for selecting Duration and set the various Duration fields - Days, Hours, Minutes, Seconds, MilliSeconds, MicroSeconds.
-version: 1.0.1
+version: 1.0.2
 homepage: https://github.com/ashutosh2014/duration_picker_dialog_box
 
 environment:
