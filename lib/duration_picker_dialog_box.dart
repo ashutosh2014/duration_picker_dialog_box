@@ -908,80 +908,78 @@ class _DurationPicker extends State<DurationPicker> {
   }
 
   Widget getFields() {
-    print("currentDurationType>>> $currentDurationType");
-    return Flexible(
-        child: Container(
-            height: 42,
-            padding: EdgeInsets.only(left: 10, right: 10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                currentDurationType == DurationPickerMode.Day
-                    ? Container(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(200),
-                            color: Color(0x1E000000)),
+    return Container(
+        height: 42,
+        padding: EdgeInsets.only(left: 10, right: 10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            currentDurationType == DurationPickerMode.Day
+                ? Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(200),
+                        color: Color(0x1E000000)),
+                    child: Icon(
+                      Icons.arrow_right_rounded,
+                      color: Color(0x42000000),
+                      size: 36,
+                    ),
+                  )
+                : Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(200),
+                        color: Colors.blueAccent),
+                    clipBehavior: Clip.antiAlias,
+                    child: InkWell(
+                        hoverColor: Colors.transparent,
+                        splashColor: Colors.transparent,
+                        highlightColor: Colors.transparent,
+                        focusColor: Colors.transparent,
+                        onTap: () {
+                          updateValue(currentDurationType.prev);
+                        },
+                        child: Icon(
+                          Icons.arrow_left_rounded,
+                          color: Colors.white,
+                          size: 36,
+                        )),
+                  ),
+            Text(
+              currentDurationType.name,
+              style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
+            ),
+            currentDurationType == DurationPickerMode.MicroSecond
+                ? Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(200),
+                        color: Color(0x1E000000)),
+                    child: Icon(
+                      Icons.arrow_right_rounded,
+                      color: Color(0x42000000),
+                      size: 36,
+                    ),
+                  )
+                : Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(200),
+                        color: Colors.blueAccent),
+                    clipBehavior: Clip.antiAlias,
+                    child: InkWell(
+                        hoverColor: Colors.transparent,
+                        splashColor: Colors.transparent,
+                        highlightColor: Colors.transparent,
+                        focusColor: Colors.transparent,
+                        onTap: () {
+                          updateValue(currentDurationType.next);
+                        },
                         child: Icon(
                           Icons.arrow_right_rounded,
-                          color: Color(0x42000000),
+                          color: Colors.white,
                           size: 36,
-                        ),
-                      )
-                    : Container(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(200),
-                            color: Colors.blueAccent),
-                        clipBehavior: Clip.antiAlias,
-                        child: InkWell(
-                            hoverColor: Colors.transparent,
-                            splashColor: Colors.transparent,
-                            highlightColor: Colors.transparent,
-                            focusColor: Colors.transparent,
-                            onTap: () {
-                              updateValue(currentDurationType.prev);
-                            },
-                            child: Icon(
-                              Icons.arrow_left_rounded,
-                              color: Colors.white,
-                              size: 36,
-                            )),
-                      ),
-                Text(
-                  currentDurationType.name,
-                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
-                ),
-                currentDurationType == DurationPickerMode.MicroSecond
-                    ? Container(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(200),
-                            color: Color(0x1E000000)),
-                        child: Icon(
-                          Icons.arrow_right_rounded,
-                          color: Color(0x42000000),
-                          size: 36,
-                        ),
-                      )
-                    : Container(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(200),
-                            color: Colors.blueAccent),
-                        clipBehavior: Clip.antiAlias,
-                        child: InkWell(
-                            hoverColor: Colors.transparent,
-                            splashColor: Colors.transparent,
-                            highlightColor: Colors.transparent,
-                            focusColor: Colors.transparent,
-                            onTap: () {
-                              updateValue(currentDurationType.next);
-                            },
-                            child: Icon(
-                              Icons.arrow_right_rounded,
-                              color: Colors.white,
-                              size: 36,
-                            )),
-                      ),
-              ],
-            )));
+                        )),
+                  ),
+          ],
+        ));
   }
 
   Widget getCurrentSelectionFieldText() {
@@ -1107,7 +1105,9 @@ class _DurationPicker extends State<DurationPicker> {
                 ),
                 currentDurationType == DurationPickerMode.Day &&
                         orientation == Orientation.landscape
-                    ? getFields()
+                    ? Expanded(
+                        child: getFields(),
+                      )
                     : Container()
               ],
             ),
